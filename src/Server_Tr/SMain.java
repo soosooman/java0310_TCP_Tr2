@@ -13,14 +13,16 @@ public class SMain {
 		serverS.bind(new InetSocketAddress("10.0.0.40",9999));
 		
 		ArrayList<Socket> cList = new ArrayList<>();
-		
+		ServerCenter sc = new ServerCenter();
 		while(true) {
 			System.out.println("서 버대기중");
 			withClient = serverS.accept();
 			cList.add(withClient);
 			System.out.println(cList);
 			System.out.println(withClient.getInetAddress()+"클라이언트 접속 함");
-			ServerChat s =new ServerChat(withClient);
+			ServerChat s =new ServerChat(withClient,sc);
+		//	sc.sList.add(s);
+			sc.addServerChat(s);
 			s.start();
 		
 		}

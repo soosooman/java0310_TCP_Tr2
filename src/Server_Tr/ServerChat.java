@@ -14,11 +14,13 @@ public class ServerChat extends Thread {
 	private InputStream reMsg = null;
 	private OutputStream sendMsg = null;
 	private String id = null;
+	private ServerCenter sc = null;
 
 	private ArrayList<Thread> tList = new ArrayList<>();
 
-	ServerChat(Socket c) {
+	ServerChat(Socket c, ServerCenter s) {
 		this.withClient = c;
+		this.sc = s;
 		// streamSet();
 	}
 
@@ -27,7 +29,7 @@ public class ServerChat extends Thread {
 		// TODO Auto-generated method stub
 		streamSet();
 		receive();
-		send();
+		//send();
 	}
 
 	private void receive() {
@@ -45,7 +47,8 @@ public class ServerChat extends Thread {
 						reMsg.read(reBuffer);
 						String msg = new String(reBuffer);
 						msg = msg.trim();
-						System.out.println("[" + id + "] " + msg);
+						sc.reMsg(msg,id);
+						// System.out.println("[" + id + "] " + msg);
 					}
 				} catch (Exception e) {
 					System.out.println("receive End");
@@ -56,30 +59,18 @@ public class ServerChat extends Thread {
 
 	}
 
-	private void send() {
+	public void send(String reMsg) {
 		// TODO Auto-generated method stub
-		new Thread(new Runnable() {
+		// TODO Auto-generated method stub
+		try {
+			sendMsg = withClient.getOutputStream();
+			sendMsg.write(reMsg.getBytes());
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				try {
-					System.out.println("send start~~");
-					Scanner in = new Scanner(System.in);
-					while (true) {
-						String reMsg = in.nextLine();
-						sendMsg = withClient.getOutputStream();
-						sendMsg.write(reMsg.getBytes());
-						System.out.println("보냄");
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					System.out.println("send End");
-					return;
-				}
-			}
-		}).start();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("send End");
+			return;
+		}
 	}
 
 	private void streamSet() {

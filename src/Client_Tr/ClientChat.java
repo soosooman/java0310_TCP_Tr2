@@ -16,6 +16,7 @@ public class ClientChat {
 	ClientChat(Socket c) {
 		this.withServer = c;
 		streamSet();
+		receive();
 		send();
 	}
 	private void receive() {
@@ -33,7 +34,7 @@ public class ClientChat {
 						reMsg.read(reBuffer);
 						String msg = new String(reBuffer);
 						msg = msg.trim();
-						System.out.println("["+id+ "] "+ msg);
+						System.out.println(msg);
 					}
 				} catch (Exception e) {
 					System.out.println("client receive end !!!");
